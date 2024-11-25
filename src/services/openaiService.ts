@@ -33,7 +33,7 @@ export const prompts = {
     2. Affected currency pairs
     3. Trading signal (buy/sell/wait)
     4. Confidence level (0-100)
-    5. Key factors considered
+    5. Key factors considered (in french)
     
     Format: JSON with the following structure:
     {
