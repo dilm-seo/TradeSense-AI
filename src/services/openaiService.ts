@@ -25,7 +25,7 @@ export const prompts = {
     id: 'conservative',
     name: 'Conservative Analysis',
     description: 'Focuses on established market patterns and fundamental analysis',
-    template: `Analysez cette actualité Forex avec une approche conservatrice:
+    template: `Analyze this forex news with a conservative approach:
     "{text}"
     
     Consider market fundamentals and established patterns. Provide:
@@ -33,7 +33,7 @@ export const prompts = {
     2. Affected currency pairs
     3. Trading signal (buy/sell/wait)
     4. Confidence level (0-100)
-    5. Key factors considered in french
+    5. Key factors considered
     
     Format: JSON with the following structure:
     {
@@ -47,7 +47,7 @@ export const prompts = {
   aggressive: {
     id: 'aggressive',
     name: 'Aggressive Trading',
-    description: 'Recherche des opportunités à court terme avec un rapport risque/récompense plus élevé',
+    description: 'Seeks short-term opportunities with higher risk/reward',
     template: `Analyze this forex news for immediate trading opportunities:
     "{text}"
     
@@ -56,7 +56,7 @@ export const prompts = {
     2. Primary trading pairs
     3. Trading signal (buy/sell/wait)
     4. Confidence level (0-100)
-    5. Expected price movement in french
+    5. Expected price movement
     
     Format: JSON with the following structure:
     {
@@ -70,7 +70,7 @@ export const prompts = {
   technical: {
     id: 'technical',
     name: 'Technical Analysis',
-    description: 'Met l'accent sur les indicateurs techniques et les modèles de graphiques',
+    description: 'Emphasizes technical indicators and chart patterns',
     template: `Analyze this forex news from a technical perspective:
     "{text}"
     
