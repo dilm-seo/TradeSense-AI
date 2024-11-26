@@ -66,29 +66,6 @@ export const prompts = {
       "confidence": 75,
       "factors": ["facteur1", "facteur2"]
     }`
-  },
-  technical: {
-    id: 'technical',
-    name: 'Analyse Technique',
-    description: 'Met l\'accent sur les indicateurs techniques et les modèles graphiques',
-    template: `Analysez cette nouvelle sur le forex d'un point de vue technique :
-    "{text}"
-    
-    Prenez en compte les indicateurs techniques et les modèles graphiques. Fournissez :
-    1. Impact sur le marché (faible/modéré/élevé)
-    2. Paires de devises concernées
-    3. Signal de trading (achat/vente/attente)
-    4. Niveau de confiance (0-100)
-    5. Niveaux techniques clés
-    
-    Format : JSON avec la structure suivante :
-    {
-      "impact": "faible|modéré|élevé",
-      "pairs": ["EURUSD", "GBPUSD"],
-      "signal": "achat|vente|attente",
-      "confidence": 75,
-      "factors": ["facteur1", "facteur2"]
-    }`
   }
 };
 
@@ -142,6 +119,36 @@ const validateResponse = (data: any): AIResponse => {
   };
 };
 
+const currencyTrends: Record<string, 'bullish' | 'bearish'> = {
+  USD: 'bullish',
+  CAD: 'bearish',
+  EUR: 'neutral',
+  GBP: 'neutral'
+};
+
+const adjustSignalByCurrencyTrend = (pair: string, signal: string): string => {
+  const [base, counter] = pair.split('/');
+  if (currencyTrends[base] === 'bullish' && currencyTrends[counter] === 'bearish') {
+    return 'achat';
+  } else if (currencyTrends[base] === 'bearish' && currencyTrends[counter] === 'bullish') {
+    return 'vente';
+  }
+  return signal;
+};
+
+const validateSignalConsistency = (pairs: string[], signal: string, factors: string[]): void => {
+  pairs.forEach(pair => {
+    const [base, counter] = pair.split('/');
+    if (signal === 'achat' && factors.includes(base)) {
+      console.log(`${pair} validé pour un signal d'achat`);
+    } else if (signal === 'vente' && factors.includes(counter)) {
+      console.log(`${pair} validé pour un signal de vente`);
+    } else {
+      console.warn(`Incohérence détectée pour la paire ${pair} avec le signal ${signal}`);
+    }
+  });
+};
+
 export const analyzeNews = async (
   text: string,
   promptType: PromptType,
@@ -156,7 +163,6 @@ export const analyzeNews = async (
       model,
       temperature: 0.7,
       max_tokens: 500,
-      response_format: { type: 'json_object' }
     });
 
     const content = completion.choices[0]?.message?.content;
@@ -166,13 +172,16 @@ export const analyzeNews = async (
 
     const result = JSON.parse(content);
     const validatedResponse = validateResponse(result);
-    
+
+    // Correction automatique des signaux incohérents
+    validatedResponse.pairs = validatedResponse.pairs.map(pair =>
+      adjustSignalByCurrencyTrend(pair, validatedResponse.signal)
+    );
+
+    validateSignalConsistency(validatedResponse.pairs, validatedResponse.signal, validatedResponse.factors);
+
     return {
-      impact: validatedResponse.impact as AIAnalysis['impact'],
-      pairs: validatedResponse.pairs,
-      signal: validatedResponse.signal as AIAnalysis['signal'],
-      confidence: validatedResponse.confidence,
-      factors: validatedResponse.factors
+      ...validatedResponse,
     };
   } catch (error) {
     console.error('Échec de l\'analyse OpenAI :', error);
