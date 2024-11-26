@@ -34,7 +34,6 @@ export const prompts = {
     3. Signal de trading (achat/vente/attente)
     4. Niveau de confiance (0-100)
     5. Facteurs clés pris en compte
-    6. Devise impact positif
     
     Format : JSON avec la structure suivante :
     {
@@ -42,8 +41,7 @@ export const prompts = {
       "pairs": ["EURUSD", "GBPUSD"],
       "signal": "achat|vente|attente",
       "confidence": 75,
-      "factors": ["facteur1", "facteur2"],
-      "devise": ["EUR", "USD"]
+      "factors": ["facteur1", "facteur2"]
     }`
   },
   aggressive: {
@@ -102,7 +100,6 @@ export interface AIAnalysis {
   signal: 'achat' | 'vente' | 'attente';
   confidence: number;
   factors: string[];
-  devise: string[];
 }
 
 interface AIResponse {
@@ -111,7 +108,6 @@ interface AIResponse {
   signal: string;
   confidence: number;
   factors: string[];
-  devise: string[];
 }
 
 const validateResponse = (data: any): AIResponse => {
@@ -136,15 +132,13 @@ const validateResponse = (data: any): AIResponse => {
   }
 
   const factors = Array.isArray(data.factors) ? data.factors : [];
-  const devise = Array.isArray(data.devise) ? data.devise : [];
 
   return {
     impact,
     pairs,
     signal,
     confidence,
-    factors,
-    devise
+    factors
   };
 };
 
@@ -161,7 +155,8 @@ export const analyzeNews = async (
       messages: [{ role: 'user', content: prompt }],
       model,
       temperature: 0.7,
-      max_tokens: 500
+      max_tokens: 500,
+      response_format: { type: 'json_object' }
     });
 
     const content = completion.choices[0]?.message?.content;
@@ -177,8 +172,7 @@ export const analyzeNews = async (
       pairs: validatedResponse.pairs,
       signal: validatedResponse.signal as AIAnalysis['signal'],
       confidence: validatedResponse.confidence,
-      factors: validatedResponse.factors,
-      devise: validatedResponse.devise
+      factors: validatedResponse.factors
     };
   } catch (error) {
     console.error('Échec de l\'analyse OpenAI :', error);
