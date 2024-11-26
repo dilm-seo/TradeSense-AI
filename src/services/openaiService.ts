@@ -1,9 +1,9 @@
 import OpenAI from 'openai';
 
 export const AI_MODELS = [
-  { id: 'gpt-4-turbo-preview', name: 'GPT-4 Turbo', description: 'Most capable model, best analysis' },
-  { id: 'gpt-4', name: 'GPT-4', description: 'Highly capable, balanced performance' },
-  { id: 'gpt-3.5-turbo', name: 'GPT-3.5 Turbo', description: 'Fast and cost-effective' }
+  { id: 'gpt-4-turbo-preview', name: 'GPT-4 Turbo', description: 'Modèle le plus performant, idéal pour les analyses avancées' },
+  { id: 'gpt-4', name: 'GPT-4', description: 'Modèle très performant, équilibré pour toutes les analyses' },
+  { id: 'gpt-3.5-turbo', name: 'GPT-3.5 Turbo', description: 'Rapide et économique' }
 ] as const;
 
 export type AIModel = typeof AI_MODELS[number]['id'];
@@ -11,9 +11,9 @@ export type AIModel = typeof AI_MODELS[number]['id'];
 const getOpenAIInstance = () => {
   const apiKey = localStorage.getItem('openai_api_key');
   if (!apiKey) {
-    throw new Error('OpenAI API key not found. Please add it in settings.');
+    throw new Error('Clé API OpenAI introuvable. Veuillez l\'ajouter dans les paramètres.');
   }
-  
+
   return new OpenAI({
     apiKey,
     dangerouslyAllowBrowser: true
@@ -23,71 +23,71 @@ const getOpenAIInstance = () => {
 export const prompts = {
   conservative: {
     id: 'conservative',
-    name: 'Conservative Analysis',
-    description: 'Focuses on established market patterns and fundamental analysis',
-    template: `Analyze this forex news with a conservative approach:
+    name: 'Analyse Conservatrice',
+    description: 'Se concentre sur les modèles établis du marché et l\'analyse fondamentale',
+    template: `Analysez cette nouvelle sur le forex avec une approche conservatrice :
     "{text}"
     
-    Consider market fundamentals and established patterns. Provide:
-    1. Market impact (low/moderate/high)
-    2. Affected currency pairs
-    3. Trading signal (buy/sell/wait)
-    4. Confidence level (0-100)
-    5. Key factors considered (in french)
+    Prenez en compte les fondamentaux du marché et les modèles établis. Fournissez :
+    1. Impact sur le marché (faible/modéré/élevé)
+    2. Paires de devises concernées
+    3. Signal de trading (achat/vente/attente)
+    4. Niveau de confiance (0-100)
+    5. Facteurs clés pris en compte
     
-    Format: JSON with the following structure:
+    Format : JSON avec la structure suivante :
     {
-      "impact": "low|moderate|high",
+      "impact": "faible|modéré|élevé",
       "pairs": ["EURUSD", "GBPUSD"],
-      "signal": "buy|sell|wait",
+      "signal": "achat|vente|attente",
       "confidence": 75,
-      "factors": ["factor1", "factor2"]
+      "factors": ["facteur1", "facteur2"]
     }`
   },
   aggressive: {
     id: 'aggressive',
-    name: 'Aggressive Trading',
-    description: 'Seeks short-term opportunities with higher risk/reward',
-    template: `Analyze this forex news for immediate trading opportunities:
+    name: 'Trading Agressif',
+    description: 'Recherche des opportunités à court terme avec un rapport risque/rendement élevé',
+    template: `Analysez cette nouvelle sur le forex pour des opportunités de trading immédiates :
     "{text}"
     
-    Focus on short-term price movements. Provide:
-    1. Market impact (low/moderate/high)
-    2. Primary trading pairs
-    3. Trading signal (buy/sell/wait)
-    4. Confidence level (0-100)
-    5. Expected price movement
+    Concentrez-vous sur les mouvements de prix à court terme. Fournissez :
+    1. Impact sur le marché (faible/modéré/élevé)
+    2. Principales paires de trading
+    3. Signal de trading (achat/vente/attente)
+    4. Niveau de confiance (0-100)
+    5. Mouvement de prix attendu
     
-    Format: JSON with the following structure:
+    Format : JSON avec la structure suivante :
     {
-      "impact": "low|moderate|high",
+      "impact": "faible|modéré|élevé",
       "pairs": ["EURUSD", "GBPUSD"],
-      "signal": "buy|sell|wait",
+      "signal": "achat|vente|attente",
       "confidence": 75,
-      "factors": ["factor1", "factor2"]
+      "factors": ["facteur1", "facteur2"]
     }`
   },
   technical: {
     id: 'technical',
-    name: 'Technical Analysis',
-    description: 'Emphasizes technical indicators and chart patterns',
-    template: `Analyze this forex news from a technical perspective:
+    name: 'Analyse Technique',
+    description: 'Met l\'accent sur les indicateurs techniques et les modèles graphiques',
+    template: `Analysez cette nouvelle sur le forex d'un point de vue technique :
     "{text}"
     
-    Consider technical indicators and chart patterns. Provide:
-    1. Market impact (low/moderate/high)
-    2. Relevant currency pairs
-    3. Trading signal (buy/sell/wait)
-    4. Confidence level (0-100)
-    5. Key technical levels
+    Prenez en compte les indicateurs techniques et les modèles graphiques. Fournissez :
+    1. Impact sur le marché (faible/modéré/élevé)
+    2. Paires de devises concernées
+    3. Signal de trading (achat/vente/attente)
+    4. Niveau de confiance (0-100)
+    5. Niveaux techniques clés
     
-    Format: JSON with the following structure:
+    Format : JSON avec la structure suivante :
     {
-      "impact": "low|moderate|high",
+      "impact": "faible|modéré|élevé",
       "pairs": ["EURUSD", "GBPUSD"],
-      "signal": "buy|sell|wait",
+      "signal": "achat|vente|attente",
       "confidence": 75,
-      "factors": ["factor1", "factor2"]
+      "factors": ["facteur1", "facteur2"]
     }`
   }
 };
@@ -95,9 +95,9 @@ export const prompts = {
 export type PromptType = keyof typeof prompts;
 
 export interface AIAnalysis {
-  impact: 'low' | 'moderate' | 'high';
+  impact: 'faible' | 'modéré' | 'élevé';
   pairs: string[];
-  signal: 'buy' | 'sell' | 'wait';
+  signal: 'achat' | 'vente' | 'attente';
   confidence: number;
   factors: string[];
 }
@@ -112,27 +112,26 @@ interface AIResponse {
 
 const validateResponse = (data: any): AIResponse => {
   if (!data || typeof data !== 'object') {
-    throw new Error('Invalid response format');
+    throw new Error('Format de réponse invalide');
   }
 
   const impact = String(data.impact || '').toLowerCase();
-  if (!['low', 'moderate', 'high'].includes(impact)) {
-    throw new Error('Invalid impact value');
+  if (!['faible', 'modéré', 'élevé'].includes(impact)) {
+    throw new Error('Valeur d\'impact invalide');
   }
 
   const pairs = Array.isArray(data.pairs) ? data.pairs : [];
   const signal = String(data.signal || '').toLowerCase();
-  if (!['buy', 'sell', 'wait'].includes(signal)) {
-    throw new Error('Invalid signal value');
+  if (!['achat', 'vente', 'attente'].includes(signal)) {
+    throw new Error('Valeur de signal invalide');
   }
 
   const confidence = Number(data.confidence || data.confidence_level);
   if (isNaN(confidence) || confidence < 0 || confidence > 100) {
-    throw new Error('Invalid confidence value');
+    throw new Error('Valeur de confiance invalide');
   }
 
-  const factors = Array.isArray(data.factors) ? data.factors : 
-                 Array.isArray(data.key_factors) ? data.key_factors : [];
+  const factors = Array.isArray(data.factors) ? data.factors : [];
 
   return {
     impact,
@@ -162,7 +161,7 @@ export const analyzeNews = async (
 
     const content = completion.choices[0]?.message?.content;
     if (!content) {
-      throw new Error('Empty response from OpenAI');
+      throw new Error('Réponse vide d\'OpenAI');
     }
 
     const result = JSON.parse(content);
@@ -176,7 +175,7 @@ export const analyzeNews = async (
       factors: validatedResponse.factors
     };
   } catch (error) {
-    console.error('OpenAI analysis failed:', error);
-    throw new Error(error instanceof Error ? error.message : 'Failed to analyze news');
+    console.error('Échec de l\'analyse OpenAI :', error);
+    throw new Error(error instanceof Error ? error.message : 'Échec de l\'analyse des nouvelles');
   }
 };
