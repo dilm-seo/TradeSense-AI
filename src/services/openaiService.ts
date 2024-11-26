@@ -42,8 +42,8 @@ export const prompts = {
       "pairs": ["EURUSD", "GBPUSD"],
       "signal": "achat|vente|attente",
       "confidence": 75,
-      "factors": ["facteur1", "facteur2"]
-      "devise": ["EUR", "USD"],
+      "factors": ["facteur1", "facteur2"],
+      "devise": ["EUR", "USD"]
     }`
   },
   aggressive: {
@@ -136,6 +136,7 @@ const validateResponse = (data: any): AIResponse => {
   }
 
   const factors = Array.isArray(data.factors) ? data.factors : [];
+  const devise = Array.isArray(data.devise) ? data.devise : [];
 
   return {
     impact,
@@ -160,8 +161,7 @@ export const analyzeNews = async (
       messages: [{ role: 'user', content: prompt }],
       model,
       temperature: 0.7,
-      max_tokens: 500,
-      response_format: { type: 'json_object' }
+      max_tokens: 500
     });
 
     const content = completion.choices[0]?.message?.content;
@@ -177,7 +177,8 @@ export const analyzeNews = async (
       pairs: validatedResponse.pairs,
       signal: validatedResponse.signal as AIAnalysis['signal'],
       confidence: validatedResponse.confidence,
-      factors: validatedResponse.factors
+      factors: validatedResponse.factors,
+      devise: validatedResponse.devise
     };
   } catch (error) {
     console.error('Échec de l\'analyse OpenAI :', error);
