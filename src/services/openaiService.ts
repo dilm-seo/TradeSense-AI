@@ -34,6 +34,7 @@ export const prompts = {
     3. Signal de trading (achat/vente/attente)
     4. Niveau de confiance (0-100)
     5. Facteurs clés pris en compte
+    6. Devise impact positif
     
     Format : JSON avec la structure suivante :
     {
@@ -42,6 +43,7 @@ export const prompts = {
       "signal": "achat|vente|attente",
       "confidence": 75,
       "factors": ["facteur1", "facteur2"]
+      "devise": ["EUR", "USD"],
     }`
   },
   aggressive: {
@@ -100,6 +102,7 @@ export interface AIAnalysis {
   signal: 'achat' | 'vente' | 'attente';
   confidence: number;
   factors: string[];
+  devise: string[];
 }
 
 interface AIResponse {
@@ -108,6 +111,7 @@ interface AIResponse {
   signal: string;
   confidence: number;
   factors: string[];
+  devise: string[];
 }
 
 const validateResponse = (data: any): AIResponse => {
@@ -138,7 +142,8 @@ const validateResponse = (data: any): AIResponse => {
     pairs,
     signal,
     confidence,
-    factors
+    factors,
+    devise
   };
 };
 
