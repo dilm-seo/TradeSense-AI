@@ -67,8 +67,8 @@ export const NewsCard: React.FC<NewsCardProps> = ({ news }) => {
         </div>
         <div className="ml-4 text-center">
           <div className={`text-lg font-bold ${
-            news.signal === 'buy' ? 'text-green-500' :
-            news.signal === 'sell' ? 'text-red-500' :
+            news.signal === 'achat' ? 'text-green-500' :
+            news.signal === 'vente' ? 'text-red-500' :
             'text-gray-500'
           }`}>
             {news.signal.toUpperCase()}
